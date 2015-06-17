@@ -1,0 +1,28 @@
+*.class
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+# .project files from Eclipse project
+.project
+
+# .classpath files from Eclipse project
+.classpath
+
+# .settings/ folder from Eclipse project
+.settings/
+
+# target/ folder from Eclipse project
+target/
+
+# Log files created by Logback
+*.log
+*.log.zip
