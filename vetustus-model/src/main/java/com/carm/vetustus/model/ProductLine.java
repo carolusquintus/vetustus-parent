@@ -87,7 +87,7 @@ public class ProductLine implements Serializable {
 	}
 	
 	public String toString() {
-		return new StringBuilder("ProductLine: {\n").
+		return new StringBuilder(getClass().getSimpleName()).append(": {\n").
 				append("\t productLine: ").append(productLine).append(",\n").
 				append("\t productLineName: ").append(productLineName).append(",\n").
 				append("\t textDescription: ").append(textDescription).append(",\n").

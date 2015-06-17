@@ -65,7 +65,7 @@ public class Payment implements Serializable {
 	}
 	
 	public String toString() {
-		return new StringBuilder("Payment: {\n").
+		return new StringBuilder(getClass().getSimpleName()).append(": {\n").
 				append(paymentPK).
 				append("\t paymentDate: ").append(paymentDate).append(",\n").
 				append("\t amount: ").append(amount).append("\n").

@@ -115,7 +115,7 @@ public class Employee implements Serializable {
 	}
 	
 	public String toString() {
-		return new StringBuilder("Employee: {\n").
+		return new StringBuilder(getClass().getSimpleName()).append(": {\n").
 				append("\t employeeNumber: ").append(employeeNumber).append(",\n").
 				append("\t lastName: ").append(lastName).append(",\n").
 				append("\t firstName: ").append(firstName).append(",\n").

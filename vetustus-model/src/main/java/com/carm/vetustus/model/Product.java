@@ -134,7 +134,7 @@ public class Product implements Serializable {
 	}
 
 	public String toString() {
-		return new StringBuilder("Product: {\n").
+		return new StringBuilder(getClass().getSimpleName()).append(": {\n").
 				append("\t productCode: ").append(productCode).append(",\n").
 				append("\t productName: ").append(productName).append(",\n").
 				append("\t productLine: ").append(productLine.getProductLine()).append(",\n").

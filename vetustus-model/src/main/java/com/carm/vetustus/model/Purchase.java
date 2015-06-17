@@ -111,7 +111,7 @@ public class Purchase implements Serializable {
 	}
 	
 	public String toString() {
-		return new StringBuilder("Purchase: {\n").
+		return new StringBuilder(getClass().getSimpleName()).append(": {\n").
 				append("\t purchaseNumber: ").append(purchaseNumber).append(",\n").
 				append("\t purchaseDate: ").append(purchaseDate).append(",\n").
 				append("\t requiredDate: ").append(requiredDate).append(",\n").

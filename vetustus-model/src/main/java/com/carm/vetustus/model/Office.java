@@ -131,7 +131,7 @@ public class Office implements Serializable {
 	}
 	
 	public String toString() {
-		return new StringBuilder("Office: {\n").
+		return new StringBuilder(getClass().getSimpleName()).append(": {\n").
 				append("\t officeCode: ").append(officeCode).append(",\n").
 				append("\t city: ").append(city).append(",\n").
 				append("\t phone: ").append(phone).append(",\n").

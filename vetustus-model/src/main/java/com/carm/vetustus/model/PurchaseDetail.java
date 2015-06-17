@@ -88,7 +88,7 @@ public class PurchaseDetail implements Serializable {
 	}
 	
 	public String toString() {
-		return new StringBuilder("PurchaseDetail: {\n").
+		return new StringBuilder(getClass().getSimpleName()).append(": {\n").
 				append(purchaseDetailPK).
 				append("\t quantityOrdered: ").append(quantityOrdered).append(",\n").
 				append("\t priceEach: ").append(priceEach).append(",\n").

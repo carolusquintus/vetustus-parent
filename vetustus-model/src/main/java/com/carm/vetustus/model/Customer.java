@@ -189,7 +189,7 @@ public class Customer implements Serializable {
 	}
 	
 	public String toString() {
-		return new StringBuilder("Customer: {\n").
+		return new StringBuilder(getClass().getSimpleName()).append(": {\n").
 				append("\t customerNumber: ").append(customerNumber).append(",\n").
 				append("\t customerName: ").append(customerName).append(",\n").
 				append("\t contactLastName: ").append(contactLastName).append(",\n").
