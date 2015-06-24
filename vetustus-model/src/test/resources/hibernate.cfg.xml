@@ -7,7 +7,7 @@
 		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
 		<property name="hibernate.connection.url">jdbc:mysql://bukowski:3306/vetustus</property>
 		<property name="hibernate.connection.username">charles</property>
-		<property name="hibernate.connection.password">XXXXXXXXXX</property>
+		<property name="hibernate.connection.password">XXXXXXXX</property>
 		<property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
 		<property name="hibernate.default_schema">vetustus</property>
 		<property name="show_sql">true</property>

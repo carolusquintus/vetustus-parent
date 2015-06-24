@@ -9,11 +9,18 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "employee")
+@NamedQueries({
+	@NamedQuery(name = "employee.findByCompleteName", query = "from Employee where firstName = :firstName and lastName = :lastName"),
+	@NamedQuery(name = "employee.findByReportsTo", query = "from Employee where reportsTo = :reportsTo"),
+	@NamedQuery(name = "employee.findByJobTitle", query = "from Employee where jobTitle = :jobTitle")
+})
 public class Employee implements Serializable {
 
 	/**
