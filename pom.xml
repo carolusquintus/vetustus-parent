@@ -11,6 +11,9 @@
 	<modules>
 		<module>vetustus-model</module>
 		<module>vetustus-persist</module>
+		<module>vetustus-domain</module>
+		<module>vetustus-service</module>
+		<module>vetustus-rest</module>		
 	</modules>
 
 	<name>Vetustus Parent Multi Project</name>
@@ -21,6 +24,7 @@
 		<logback.version>1.1.0</logback.version>
 		<spring.version>4.1.6.RELEASE</spring.version>
 		<hibernate.version>4.3.6.Final</hibernate.version>
+		<jersey.version>2.10.4</jersey.version>
 	</properties>
 
 	<dependencyManagement>
@@ -60,7 +64,7 @@
 				<groupId>mysql</groupId>
 				<artifactId>mysql-connector-java</artifactId>
 				<version>5.1.26</version>
-		</dependency>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
