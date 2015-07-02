@@ -28,6 +28,11 @@ public class CustomerTest {
 		session = HibernateUtil.getSessionFactory().openSession();
 	}
 	
+	@After
+	public void after() {
+		session.close();
+	}
+	
 	@Test
 	public void testAACreateEmployee() {
 		session.beginTransaction();
@@ -146,10 +151,4 @@ public class CustomerTest {
 		
 		session.getTransaction().commit();
 	}
-	
-	@After
-	public void after() {
-		session.close();
-	}
-
 }

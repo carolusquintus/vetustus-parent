@@ -36,6 +36,11 @@ public class PurchaseDetailTest {
 		session = HibernateUtil.getSessionFactory().openSession();
 	}
 	
+	@After
+	public void after() {
+		session.close();
+	}
+	
 	@Test
 	public void testAACreateAllEntities() {
 		session.beginTransaction();
@@ -202,11 +207,4 @@ public class PurchaseDetailTest {
 		
 		session.getTransaction().commit();
 	}
-	
-	@After
-	public void after() {
-		session.close();
-	}
-	
-
 }

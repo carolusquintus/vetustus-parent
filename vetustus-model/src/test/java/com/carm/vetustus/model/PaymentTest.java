@@ -33,6 +33,11 @@ public class PaymentTest {
 		session = HibernateUtil.getSessionFactory().openSession();
 	}
 	
+	@After
+	public void after() {
+		session.close();
+	}
+	
 	@Test
 	public void testAACustomer() {
 		session.beginTransaction();
@@ -157,10 +162,4 @@ public class PaymentTest {
 		
 		session.getTransaction().commit();
 	}
-	
-	@After
-	public void after() {
-		session.close();
-	}
-
 }

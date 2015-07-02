@@ -1,9 +1,14 @@
 package com.carm.vetustus.model;
 
+import static org.hamcrest.CoreMatchers.*;
+
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.junit.After;
+
+import static org.junit.Assert.*;
+
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -26,6 +31,11 @@ public class OfficeTest {
 		session = HibernateUtil.getSessionFactory().openSession();
 	}
 	
+	@After
+	public void after() {
+		session.close();
+	}
+	
 	@Test
 	public void testACreate() {
 		session.beginTransaction();
@@ -41,10 +51,15 @@ public class OfficeTest {
 		office.setPostalCode("03023");
 		office.setTerritory("LATAM");
 		
-		session.save(office);
+		final String key = (String) session.save(office);
+		
 		session.getTransaction().commit();
+		
+		assertThat(key, is(notNullValue()));
+		assertThat(key, is(equalTo("8")));
+		LOG.info(key);
 	}
-	
+
 	@Test
 	public void testBUpdate() {
 		session.beginTransaction();
@@ -73,6 +88,14 @@ public class OfficeTest {
 		
 		office = (Office) criteria.uniqueResult();
 		
+		assertThat(office, is(notNullValue()));
+		assertThat(office.getOfficeCode(), is(equalTo("8")));
+		assertThat(office.getOfficeCode(), is(equalTo("8")));
+		assertThat(office.getOfficeCode(), is(equalTo("8")));
+		assertThat(office.getOfficeCode(), is(equalTo("8")));
+		assertThat(office.getOfficeCode(), is(equalTo("8")));
+		assertThat(office.getOfficeCode(), is(equalTo("8")));
+		
 		LOG.info(office.toString());
 		LOG.info(office.getEmployees().toArray().toString());
 	}
@@ -86,10 +109,4 @@ public class OfficeTest {
 		session.delete(office);
 		session.getTransaction().commit();
 	}
-	
-	@After
-	public void after() {
-		session.close();
-	}
-
 }

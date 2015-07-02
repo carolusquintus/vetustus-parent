@@ -26,6 +26,11 @@ public class EmployeeTest {
 	public void before() {
 		session = HibernateUtil.getSessionFactory().openSession();
 	}
+
+	@After
+	public void after() {
+		session.close();
+	}
 	
 	@Test
 	public void testAACreateOffice() {
@@ -119,10 +124,5 @@ public class EmployeeTest {
 		
 		session.delete(office);
 		session.getTransaction().commit();		
-	}
-	
-	@After
-	public void after() {
-		session.close();
 	}
 }

@@ -26,6 +26,11 @@ public class ProductTest {
 	public void before() {
 		session = HibernateUtil.getSessionFactory().openSession();
 	}
+	
+	@After
+	public void after() {
+		session.close();
+	}
 
 	@Test
 	public void testAACreateProductLine() {
@@ -117,10 +122,4 @@ public class ProductTest {
 		session.delete(productLine);
 		session.getTransaction().commit();
 	}
-	
-	@After
-	public void after() {
-		session.close();
-	}
-
 }
