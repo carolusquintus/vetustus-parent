@@ -6,6 +6,8 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -25,8 +27,9 @@ public class Office implements Serializable {
 	private static final long serialVersionUID = 5162674072680002618L;
 	
 	@Id
-	@Column(name = "office_code", nullable = false, length = 10)
-	private String officeCode;
+	@Column(name = "office_code", nullable = false)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer officeCode;
 	
 	@Column(name = "city", nullable = false, length = 50)
 	private String city;
@@ -55,11 +58,11 @@ public class Office implements Serializable {
 	@OneToMany(mappedBy = "office")
 	private Set<Employee> employees = new HashSet<Employee>(0);
 	
-	public String getOfficeCode() {
+	public Integer getOfficeCode() {
 		return officeCode;
 	}
 	
-	public void setOfficeCode(String officeCode) {
+	public void setOfficeCode(Integer officeCode) {
 		this.officeCode = officeCode;
 	}
 	

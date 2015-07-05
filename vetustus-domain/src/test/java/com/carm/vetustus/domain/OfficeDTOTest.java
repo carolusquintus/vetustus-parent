@@ -12,7 +12,7 @@ public class OfficeDTOTest {
 	@Test
 	public void testCopeProperties() {
 		Office office = new Office();
-		office.setOfficeCode("8");
+		office.setOfficeCode(8);
 		office.setCity("Mexico City");
 		office.setPhone("+52 55 5612 3450");
 		office.setAddressLine1("156 Casas Grandes");

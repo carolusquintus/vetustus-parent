@@ -5,6 +5,8 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -22,6 +24,7 @@ public class Purchase implements Serializable {
 	
 	@Id
 	@Column(name = "purchase_number", nullable = false)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer purchaseNumber;
 	
 	@Column(name = "purchase_date", nullable = false, updatable = false)

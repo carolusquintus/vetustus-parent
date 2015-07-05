@@ -3,6 +3,7 @@ package com.carm.vetustus.domain;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 
+import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -11,8 +12,8 @@ import org.apache.commons.beanutils.BeanUtils;
 
 import com.carm.vetustus.model.Office;
 
-@XmlRootElement(name = "Office")
-@XmlAccessorType
+@XmlRootElement(name = "office")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class OfficeDTO implements Serializable {
 
 	/**
@@ -21,7 +22,7 @@ public class OfficeDTO implements Serializable {
 	private static final long serialVersionUID = -5495696854981157752L;
 	
 	@XmlElement(name = "officeCode")
-	private String officeCode;
+	private Integer officeCode;
 	
 	@XmlElement(name = "city")
 	private String city;
@@ -50,7 +51,7 @@ public class OfficeDTO implements Serializable {
 	public OfficeDTO() {
 	}
 
-	public OfficeDTO(String officeCode, String city, String phone,
+	public OfficeDTO(Integer officeCode, String city, String phone,
 			String addressLine1, String addressLine2, String state,
 			String country, String postalCode, String territory) {
 		this.officeCode = officeCode;
@@ -72,11 +73,11 @@ public class OfficeDTO implements Serializable {
 		}
 	}
 
-	public String getOfficeCode() {
+	public Integer getOfficeCode() {
 		return officeCode;
 	}
 
-	public void setOfficeCode(String officeCode) {
+	public void setOfficeCode(Integer officeCode) {
 		this.officeCode = officeCode;
 	}
 
