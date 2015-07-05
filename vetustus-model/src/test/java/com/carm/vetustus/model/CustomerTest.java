@@ -23,6 +23,10 @@ public class CustomerTest {
 	private Employee employee;
 	private Customer customer;
 	
+	private static Integer officeCode;
+	private static Integer employeeNumber;
+	private static Integer customerNumber;
+	
 	@Before
 	public void before() {
 		session = HibernateUtil.getSessionFactory().openSession();
@@ -38,7 +42,6 @@ public class CustomerTest {
 		session.beginTransaction();
 		
 		office = new Office();
-		office.setOfficeCode("8");
 		office.setCity("Mexico City");
 		office.setPhone("+52 55 5612 5172");
 		office.setAddressLine1("187 Casas Grandes");
@@ -49,7 +52,6 @@ public class CustomerTest {
 		office.setTerritory("LATAM");
 				
 		employee = new Employee();
-		employee.setEmployeeNumber(1077);
 		employee.setLastName("Rosas");
 		employee.setFirstName("Carlos");
 		employee.setExtension("x4625");
@@ -58,8 +60,8 @@ public class CustomerTest {
 		employee.setReportsTo(1002);
 		employee.setJobTitle("VP Sales");
 		
-		session.save(office);
-		session.save(employee);
+		officeCode = (Integer) session.save(office);
+		employeeNumber = (Integer) session.save(employee);
 		session.getTransaction().commit();
 	}
 	
@@ -68,10 +70,9 @@ public class CustomerTest {
 		session.beginTransaction();
 		
 		employee = new Employee();
-		employee.setEmployeeNumber(1077);		
+		employee.setEmployeeNumber(employeeNumber);		
 		
 		customer = new Customer();
-		customer.setCustomerNumber(117);
 		customer.setCustomerName("Le Bachete Prem");
 		customer.setContactLastName("Soriano");
 		customer.setContactFirstName("Joan");
@@ -85,7 +86,7 @@ public class CustomerTest {
 		customer.setEmployee(employee);
 		customer.setCreditLimit(118200.00);
 		
-		session.save(customer);
+		customerNumber = (Integer) session.save(customer);
 		session.getTransaction().commit();
 	}
 	
@@ -94,10 +95,10 @@ public class CustomerTest {
 		session.beginTransaction();
 		
 		employee = new Employee();
-		employee.setEmployeeNumber(1077);		
+		employee.setEmployeeNumber(employeeNumber);		
 		
 		customer = new Customer();
-		customer.setCustomerNumber(117);
+		customer.setCustomerNumber(customerNumber);
 		customer.setCustomerName("Le Batata Praem");
 		customer.setContactLastName("Vargas");
 		customer.setContactFirstName("Luis");
@@ -120,7 +121,7 @@ public class CustomerTest {
 		session.beginTransaction();
 		
 		Criteria criteria = session.createCriteria(Customer.class);
-		criteria.add(Restrictions.eq("customerNumber", 117));
+		criteria.add(Restrictions.eq("customerNumber", customerNumber));
 		
 		customer = (Customer) criteria.uniqueResult();
 		
@@ -133,22 +134,28 @@ public class CustomerTest {
 	public void testDDelete() {
 		session.beginTransaction();
 		
-		customer = (Customer) session.get(Customer.class, 117);
+		customer = (Customer) session.get(Customer.class, customerNumber);
 		
 		session.delete(customer);
+		
 		session.getTransaction().commit();
+		
+		session.createSQLQuery("ALTER TABLE customer AUTO_INCREMENT = " + (customerNumber - 1)).executeUpdate();
 	}
 	
 	@Test
 	public void testDDeleteEmployee() {
 		session.beginTransaction();
 		
-		employee = (Employee) session.get(Employee.class, 1077);		
-		office = (Office) session.get(Office.class, "8");
+		employee = (Employee) session.get(Employee.class, employeeNumber);		
+		office = (Office) session.get(Office.class, officeCode);
 		
 		session.delete(employee);
 		session.delete(office);
 		
 		session.getTransaction().commit();
+		
+		session.createSQLQuery("ALTER TABLE employee AUTO_INCREMENT = " + (employeeNumber - 1)).executeUpdate();
+		session.createSQLQuery("ALTER TABLE office AUTO_INCREMENT = " + (officeCode - 1)).executeUpdate();
 	}
 }

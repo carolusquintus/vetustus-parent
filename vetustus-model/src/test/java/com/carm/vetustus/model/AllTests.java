@@ -5,15 +5,15 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ 
-		CustomerTest.class, 
-		EmployeeTest.class, 
-		OfficeTest.class, 
-		PaymentTest.class, 
-		ProductLineTest.class, 
+@SuiteClasses({
+		OfficeTest.class,
+		EmployeeTest.class,
+		CustomerTest.class,
+		PaymentTest.class,
+		ProductLineTest.class,
 		ProductTest.class,
-		PurchaseDetailTest.class, 
-		PurchaseTest.class 
+		PurchaseTest.class,
+		PurchaseDetailTest.class		 
 })
 public class AllTests {
 

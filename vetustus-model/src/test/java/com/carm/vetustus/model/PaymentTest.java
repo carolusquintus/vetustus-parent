@@ -28,6 +28,10 @@ public class PaymentTest {
 	private Payment payment;
 	private PaymentPK paymentPK;
 	
+	private static Integer officeCode;
+	private static Integer employeeNumber;
+	private static Integer customerNumber;
+	
 	@Before
 	public void before() {
 		session = HibernateUtil.getSessionFactory().openSession();
@@ -43,7 +47,6 @@ public class PaymentTest {
 		session.beginTransaction();
 		
 		office = new Office();
-		office.setOfficeCode("8");
 		office.setCity("Mexico City");
 		office.setPhone("+52 55 5612 5172");
 		office.setAddressLine1("187 Casas Grandes");
@@ -54,7 +57,6 @@ public class PaymentTest {
 		office.setTerritory("LATAM");
 		
 		employee = new Employee();
-		employee.setEmployeeNumber(1077);
 		employee.setLastName("Rosas");
 		employee.setFirstName("Carlos");
 		employee.setExtension("x4625");
@@ -64,7 +66,6 @@ public class PaymentTest {
 		employee.setJobTitle("VP Sales");
 		
 		customer = new Customer();
-		customer.setCustomerNumber(117);
 		customer.setCustomerName("Le Bachete Prem");
 		customer.setContactLastName("Soriano");
 		customer.setContactFirstName("Joan");
@@ -78,9 +79,9 @@ public class PaymentTest {
 		customer.setEmployee(employee);
 		customer.setCreditLimit(118200.00);
 		
-		session.save(office);
-		session.save(employee);
-		session.save(customer);
+		officeCode = (Integer) session.save(office);
+		employeeNumber = (Integer) session.save(employee);
+		customerNumber = (Integer)session.save(customer);
 		session.getTransaction().commit();
 	}
 	
@@ -89,7 +90,7 @@ public class PaymentTest {
 		session.beginTransaction();
 		
 		paymentPK = new PaymentPK();
-		paymentPK.setCustomerNumber(117);
+		paymentPK.setCustomerNumber(customerNumber);
 		paymentPK.setCheckNumber("BR462567");
 		
 		payment = new Payment();
@@ -106,7 +107,7 @@ public class PaymentTest {
 		session.beginTransaction();
 		
 		paymentPK = new PaymentPK();
-		paymentPK.setCustomerNumber(117);
+		paymentPK.setCustomerNumber(customerNumber);
 		paymentPK.setCheckNumber("BR462567");
 		
 		payment = new Payment();
@@ -123,7 +124,7 @@ public class PaymentTest {
 		session.beginTransaction();
 		
 		Criteria criteria = session.createCriteria(Payment.class);
-		criteria.add(Restrictions.eq("paymentPK.customerNumber", 117));
+		criteria.add(Restrictions.eq("paymentPK.customerNumber", customerNumber));
 		criteria.add(Restrictions.eq("paymentPK.checkNumber", "BR462567"));
 		
 		payment = (Payment) criteria.uniqueResult();
@@ -139,7 +140,7 @@ public class PaymentTest {
 		session.beginTransaction();
 		
 		paymentPK = new PaymentPK();
-		paymentPK.setCustomerNumber(117);
+		paymentPK.setCustomerNumber(customerNumber);
 		paymentPK.setCheckNumber("BR462567");
 		
 		payment = (Payment) session.get(Payment.class, paymentPK);
@@ -152,14 +153,18 @@ public class PaymentTest {
 	public void testDDeleteCustomer() {
 		session.beginTransaction();
 		
-		customer = (Customer) session.get(Customer.class, 117);
-		employee = (Employee) session.get(Employee.class, 1077);
-		office = (Office) session.get(Office.class, "8");
+		customer = (Customer) session.get(Customer.class, customerNumber);
+		employee = (Employee) session.get(Employee.class, employeeNumber);
+		office = (Office) session.get(Office.class, officeCode);
 		
 		session.delete(customer);
 		session.delete(employee);
 		session.delete(office);
 		
 		session.getTransaction().commit();
+		
+		session.createSQLQuery("ALTER TABLE customer AUTO_INCREMENT = " + (customerNumber - 1)).executeUpdate();
+		session.createSQLQuery("ALTER TABLE employee AUTO_INCREMENT = " + (employeeNumber - 1)).executeUpdate();
+		session.createSQLQuery("ALTER TABLE office AUTO_INCREMENT = " + (officeCode - 1)).executeUpdate();
 	}
 }

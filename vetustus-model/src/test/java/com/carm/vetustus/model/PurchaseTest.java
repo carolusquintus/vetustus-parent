@@ -25,6 +25,11 @@ public class PurchaseTest {
 	private Customer customer;
 	private Purchase purchase;
 	
+	private static Integer officeCode;
+	private static Integer employeeNumber;
+	private static Integer customerNumber;
+	private static Integer purchaseNumber;
+	
 	private Session session;
 	
 	@Before
@@ -42,7 +47,6 @@ public class PurchaseTest {
 		session.beginTransaction();
 		
 		office = new Office();
-		office.setOfficeCode("8");
 		office.setCity("Mexico City");
 		office.setPhone("+52 55 5612 5172");
 		office.setAddressLine1("187 Casas Grandes");
@@ -53,7 +57,6 @@ public class PurchaseTest {
 		office.setTerritory("LATAM");
 		
 		employee = new Employee();
-		employee.setEmployeeNumber(1077);
 		employee.setLastName("Rosas");
 		employee.setFirstName("Carlos");
 		employee.setExtension("x4625");
@@ -63,7 +66,6 @@ public class PurchaseTest {
 		employee.setJobTitle("VP Sales");
 		
 		customer = new Customer();
-		customer.setCustomerNumber(117);
 		customer.setCustomerName("Le Bachete Prem");
 		customer.setContactLastName("Soriano");
 		customer.setContactFirstName("Joan");
@@ -77,9 +79,9 @@ public class PurchaseTest {
 		customer.setEmployee(employee);
 		customer.setCreditLimit(118200.00);
 		
-		session.save(office);
-		session.save(employee);		
-		session.save(customer);
+		officeCode = (Integer) session.save(office);
+		employeeNumber = (Integer) session.save(employee);		
+		customerNumber = (Integer) session.save(customer);
 		session.getTransaction().commit();
 	}
 	
@@ -88,19 +90,17 @@ public class PurchaseTest {
 		session.beginTransaction();
 		
 		customer = new Customer();
-		customer.setCustomerNumber(117);
+		customer.setCustomerNumber(customerNumber);
 		
 		purchase = new Purchase();
-		purchase.setPurchaseNumber(10426);
 		purchase.setPurchaseDate(new Timestamp(new Date().getTime()));
 		purchase.setRequiredDate(new Timestamp(new Date().getTime() + 345600000));
 		purchase.setShippedDate(null);
 		purchase.setStatus("In Process");
 		purchase.setComments("Customer has worked with some of our vendors and requieres preference in its shipment.");
 		purchase.setCustomer(customer);
-
 		
-		session.save(purchase);
+		purchaseNumber = (Integer) session.save(purchase);
 		session.getTransaction().commit();
 	}
 	
@@ -109,10 +109,10 @@ public class PurchaseTest {
 		session.beginTransaction();
 		
 		customer = new Customer();
-		customer.setCustomerNumber(117);
+		customer.setCustomerNumber(customerNumber);
 		
 		purchase = new Purchase();
-		purchase.setPurchaseNumber(10426);
+		purchase.setPurchaseNumber(purchaseNumber);
 		purchase.setShippedDate(new Timestamp(new Date().getTime() + 172800000));
 		purchase.setStatus("Shipped");
 		purchase.setCustomer(customer);
@@ -126,7 +126,7 @@ public class PurchaseTest {
 		session.beginTransaction();
 		
 		Criteria criteria = session.createCriteria(Purchase.class);
-		criteria.add(Restrictions.eq("purchaseNumber", 10426));
+		criteria.add(Restrictions.eq("purchaseNumber", purchaseNumber));
 		
 		purchase = (Purchase) criteria.uniqueResult();
 		
@@ -140,30 +140,31 @@ public class PurchaseTest {
 	public void testDDelete() {
 		session.beginTransaction();
 		
-		purchase = (Purchase) session.get(Purchase.class, 10426);
+		purchase = (Purchase) session.get(Purchase.class, purchaseNumber);
 		
 		session.delete(purchase);
+		
 		session.getTransaction().commit();
+		
+		session.createSQLQuery("ALTER TABLE purchase AUTO_INCREMENT = " + (purchaseNumber - 1)).executeUpdate();
 	}
 	
 	@Test
 	public void testDDeleteCustomer() {
 		session.beginTransaction();
 		
-		customer = (Customer) session.get(Customer.class, 117);
+		customer = (Customer) session.get(Customer.class, customerNumber);
+		employee = (Employee) session.get(Employee.class, employeeNumber);
+		office = (Office) session.get(Office.class, officeCode);
+		
 		session.delete(customer);
-		session.getTransaction().commit();
-		
-		session.beginTransaction();
-		
-		employee = (Employee) session.get(Employee.class, 1077);
 		session.delete(employee);
-		session.getTransaction().commit();
-		
-		session.beginTransaction();
-		
-		office = (Office) session.get(Office.class, "8");
 		session.delete(office);
+		
 		session.getTransaction().commit();
+		
+		session.createSQLQuery("ALTER TABLE customer AUTO_INCREMENT = " + (customerNumber - 1)).executeUpdate();
+		session.createSQLQuery("ALTER TABLE employee AUTO_INCREMENT = " + (employeeNumber - 1)).executeUpdate();
+		session.createSQLQuery("ALTER TABLE office AUTO_INCREMENT = " + (officeCode - 1)).executeUpdate();
 	}
 }

@@ -22,6 +22,9 @@ public class EmployeeTest {
 	private Office office;
 	private Employee employee;
 	
+	private static Integer officeCode;
+	private static Integer employeeNumber;
+	
 	@Before
 	public void before() {
 		session = HibernateUtil.getSessionFactory().openSession();
@@ -37,7 +40,6 @@ public class EmployeeTest {
 		session.beginTransaction();
 		
 		office = new Office();
-		office.setOfficeCode("8");
 		office.setCity("Mexico City");
 		office.setPhone("+52 55 5612 5172");
 		office.setAddressLine1("187 Casas Grandes");
@@ -47,7 +49,7 @@ public class EmployeeTest {
 		office.setPostalCode("03023");
 		office.setTerritory("LATAM");
 		
-		session.save(office);
+		officeCode = (Integer) session.save(office);
 		session.getTransaction().commit();		
 	}
 	
@@ -56,10 +58,9 @@ public class EmployeeTest {
 		session.beginTransaction();
 		
 		office = new Office();
-		office.setOfficeCode("8");
+		office.setOfficeCode(officeCode);
 		
 		employee = new Employee();
-		employee.setEmployeeNumber(1077);
 		employee.setLastName("Rosas");
 		employee.setFirstName("Carlos");
 		employee.setExtension("x4625");
@@ -68,7 +69,7 @@ public class EmployeeTest {
 		employee.setReportsTo(1002);
 		employee.setJobTitle("VP Sales");
 		
-		session.save(employee);
+		employeeNumber = (Integer) session.save(employee);
 		session.getTransaction().commit();
 	}
 	
@@ -77,10 +78,10 @@ public class EmployeeTest {
 		session.beginTransaction();
 		
 		office = new Office();
-		office.setOfficeCode("8");
+		office.setOfficeCode(officeCode);
 		
 		employee = new Employee();
-		employee.setEmployeeNumber(1077);
+		employee.setEmployeeNumber(employeeNumber);
 		employee.setLastName("Rosae");
 		employee.setFirstName("Carolus");
 		employee.setExtension("x4625");
@@ -98,7 +99,7 @@ public class EmployeeTest {
 		session.beginTransaction();
 		
 		Criteria criteria = session.createCriteria(Employee.class);
-		criteria.add(Restrictions.eq("employeeNumber", 1077));
+		criteria.add(Restrictions.eq("employeeNumber", employeeNumber));
 		
 		employee = (Employee) criteria.uniqueResult();
 		
@@ -110,19 +111,25 @@ public class EmployeeTest {
 	public void testDDelete() {
 		session.beginTransaction();
 		
-		employee = (Employee) session.get(Employee.class, 1077);
+		employee = (Employee) session.get(Employee.class, employeeNumber);
 		
 		session.delete(employee);
-		session.getTransaction().commit();		
+		
+		session.getTransaction().commit();
+		
+		session.createSQLQuery("ALTER TABLE office AUTO_INCREMENT = " + (officeCode - 1)).executeUpdate();
 	}
 	
 	@Test
 	public void testDDeleteOffice() {
 		session.beginTransaction();
 		
-		office = (Office) session.get(Office.class, "8");
+		office = (Office) session.get(Office.class, officeCode);
 		
 		session.delete(office);
-		session.getTransaction().commit();		
+		
+		session.getTransaction().commit();
+		
+		session.createSQLQuery("ALTER TABLE employee AUTO_INCREMENT = " + (employeeNumber - 1)).executeUpdate();
 	}
 }

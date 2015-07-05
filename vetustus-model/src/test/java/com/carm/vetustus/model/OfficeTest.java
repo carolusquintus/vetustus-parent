@@ -11,6 +11,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.slf4j.Logger;
@@ -25,6 +26,7 @@ public class OfficeTest {
 	
 	private Session session;
 	private Office office;
+	private static Integer officeCode;
 	
 	@Before
 	public void before() {
@@ -41,7 +43,6 @@ public class OfficeTest {
 		session.beginTransaction();
 		
 		office = new Office();
-		office.setOfficeCode("8");
 		office.setCity("Mexico City");
 		office.setPhone("+52 55 5612 5172");
 		office.setAddressLine1("187 Casas Grandes");
@@ -51,21 +52,23 @@ public class OfficeTest {
 		office.setPostalCode("03023");
 		office.setTerritory("LATAM");
 		
-		final String key = (String) session.save(office);
+		officeCode = (Integer) session.save(office);
 		
 		session.getTransaction().commit();
 		
-		assertThat(key, is(notNullValue()));
-		assertThat(key, is(equalTo("8")));
-		LOG.info(key);
+		assertThat(officeCode, is(notNullValue()));
+//		assertThat(key, is(equalTo(8)));
+		LOG.info(officeCode.toString());
 	}
 
 	@Test
 	public void testBUpdate() {
 		session.beginTransaction();
 		
+		LOG.info(officeCode.toString());
+		
 		office = new Office();
-		office.setOfficeCode("8");
+		office.setOfficeCode(officeCode);
 		office.setCity("Mexico City");
 		office.setPhone("+52 55 5612 3450");
 		office.setAddressLine1("156 Casas Grandes");
@@ -84,17 +87,12 @@ public class OfficeTest {
 		session.beginTransaction();
 		
 		Criteria criteria = session.createCriteria(Office.class);
-		criteria.add(Restrictions.eq("officeCode", "8"));
+		criteria.add(Restrictions.eq("officeCode", officeCode));
 		
 		office = (Office) criteria.uniqueResult();
 		
 		assertThat(office, is(notNullValue()));
-		assertThat(office.getOfficeCode(), is(equalTo("8")));
-		assertThat(office.getOfficeCode(), is(equalTo("8")));
-		assertThat(office.getOfficeCode(), is(equalTo("8")));
-		assertThat(office.getOfficeCode(), is(equalTo("8")));
-		assertThat(office.getOfficeCode(), is(equalTo("8")));
-		assertThat(office.getOfficeCode(), is(equalTo("8")));
+		assertThat(office.getOfficeCode(), is(equalTo(officeCode)));
 		
 		LOG.info(office.toString());
 		LOG.info(office.getEmployees().toArray().toString());
@@ -104,9 +102,12 @@ public class OfficeTest {
 	public void testDDelete() {
 		session.beginTransaction();
 		
-		office = (Office) session.get(Office.class, "8");
+		office = (Office) session.get(Office.class, officeCode);
 		
 		session.delete(office);
+		
 		session.getTransaction().commit();
+		
+		session.createSQLQuery("ALTER TABLE office AUTO_INCREMENT = " + (officeCode - 1)).executeUpdate();
 	}
 }

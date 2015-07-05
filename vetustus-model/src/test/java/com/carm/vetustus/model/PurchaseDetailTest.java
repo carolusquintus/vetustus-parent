@@ -9,6 +9,7 @@ import org.hibernate.criterion.Restrictions;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.slf4j.Logger;
@@ -31,6 +32,11 @@ public class PurchaseDetailTest {
 	private PurchaseDetail purchaseDetail;
 	private PurchaseDetailPK purchaseDetailPK;
 	
+	private static Integer officeCode;
+	private static Integer employeeNumber;
+	private static Integer customerNumber;
+	private static Integer purchaseNumber;
+	
 	@Before
 	public void before() {
 		session = HibernateUtil.getSessionFactory().openSession();
@@ -46,7 +52,6 @@ public class PurchaseDetailTest {
 		session.beginTransaction();
 		
 		office = new Office();
-		office.setOfficeCode("8");
 		office.setCity("Mexico City");
 		office.setPhone("+52 55 5612 5172");
 		office.setAddressLine1("187 Casas Grandes");
@@ -57,7 +62,6 @@ public class PurchaseDetailTest {
 		office.setTerritory("LATAM");		
 		
 		employee = new Employee();
-		employee.setEmployeeNumber(1077);
 		employee.setLastName("Rosas");
 		employee.setFirstName("Carlos");
 		employee.setExtension("x4625");
@@ -67,7 +71,6 @@ public class PurchaseDetailTest {
 		employee.setJobTitle("VP Sales");
 		
 		customer = new Customer();
-		customer.setCustomerNumber(117);
 		customer.setCustomerName("Le Bachete Prem");
 		customer.setContactLastName("Soriano");
 		customer.setContactFirstName("Joan");
@@ -82,7 +85,6 @@ public class PurchaseDetailTest {
 		customer.setCreditLimit(118200.00);
 		
 		purchase = new Purchase();
-		purchase.setPurchaseNumber(10426);
 		purchase.setPurchaseDate(new Timestamp(new Date().getTime()));
 		purchase.setRequiredDate(new Timestamp(new Date().getTime() + 345600000));
 		purchase.setShippedDate(null);
@@ -108,10 +110,10 @@ public class PurchaseDetailTest {
 		product.setBuyPrice(355.7);
 		product.setMsrp(11128.5);
 		
-		session.save(office);
-		session.save(employee);
-		session.save(customer);		
-		session.save(purchase);
+		officeCode = (Integer) session.save(office);
+		employeeNumber = (Integer) session.save(employee);
+		customerNumber = (Integer) session.save(customer);
+		purchaseNumber = (Integer) session.save(purchase);
 		session.save(productLine);
 		session.save(product);
 		session.getTransaction().commit();
@@ -122,7 +124,7 @@ public class PurchaseDetailTest {
 		session.beginTransaction();
 		
 		purchaseDetailPK = new PurchaseDetailPK();
-		purchaseDetailPK.setPurchaseNumber(10426);
+		purchaseDetailPK.setPurchaseNumber(purchaseNumber);
 		purchaseDetailPK.setProductCode("S12_4477");
 		
 		purchaseDetail = new PurchaseDetail();
@@ -140,7 +142,7 @@ public class PurchaseDetailTest {
 		session.beginTransaction();
 		
 		purchaseDetailPK = new PurchaseDetailPK();
-		purchaseDetailPK.setPurchaseNumber(10426);
+		purchaseDetailPK.setPurchaseNumber(purchaseNumber);
 		purchaseDetailPK.setProductCode("S12_4477");
 		
 		purchaseDetail = new PurchaseDetail();
@@ -158,7 +160,7 @@ public class PurchaseDetailTest {
 		session.beginTransaction();
 		
 		Criteria criteria = session.createCriteria(PurchaseDetail.class);
-		criteria.add(Restrictions.eq("purchaseDetailPK.purchaseNumber", 10426));
+		criteria.add(Restrictions.eq("purchaseDetailPK.purchaseNumber", purchaseNumber));
 		criteria.add(Restrictions.eq("purchaseDetailPK.productCode", "S12_4477"));
 		
 		purchaseDetail = (PurchaseDetail) criteria.uniqueResult();
@@ -178,7 +180,7 @@ public class PurchaseDetailTest {
 		session.beginTransaction();
 		
 		purchaseDetailPK = new PurchaseDetailPK();
-		purchaseDetailPK.setPurchaseNumber(10426);
+		purchaseDetailPK.setPurchaseNumber(purchaseNumber);
 		purchaseDetailPK.setProductCode("S12_4477");
 		
 		purchaseDetail = (PurchaseDetail) session.get(PurchaseDetail.class, purchaseDetailPK);
@@ -193,10 +195,10 @@ public class PurchaseDetailTest {
 		
 		product = (Product) session.get(Product.class, "S12_4477");
 		productLine = (ProductLine) session.get(ProductLine.class, "GTI");
-		purchase = (Purchase) session.get(Purchase.class, 10426);
-		customer = (Customer) session.get(Customer.class, 117);
-		employee = (Employee) session.get(Employee.class, 1077);
-		office = (Office) session.get(Office.class, "8");
+		purchase = (Purchase) session.get(Purchase.class, purchaseNumber);
+		customer = (Customer) session.get(Customer.class, customerNumber);
+		employee = (Employee) session.get(Employee.class, employeeNumber);
+		office = (Office) session.get(Office.class, officeCode);
 		
 		session.delete(product);
 		session.delete(productLine);
@@ -206,5 +208,10 @@ public class PurchaseDetailTest {
 		session.delete(office);
 		
 		session.getTransaction().commit();
+		
+		session.createSQLQuery("ALTER TABLE purchase AUTO_INCREMENT = " + (purchaseNumber - 1)).executeUpdate();
+		session.createSQLQuery("ALTER TABLE customer AUTO_INCREMENT = " + (customerNumber - 1)).executeUpdate();
+		session.createSQLQuery("ALTER TABLE employee AUTO_INCREMENT = " + (employeeNumber- 1)).executeUpdate();
+		session.createSQLQuery("ALTER TABLE office AUTO_INCREMENT = " + (officeCode - 1)).executeUpdate();
 	}
 }
